@@ -8,15 +8,18 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-    <mvc:annotation-driven/>
-
     <context:component-scan base-package="com.masters"/>
+
+    <bean id="apiProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/open_api.properties" />
+    </bean>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:resources mapping="/resources/**" location="resources/"/>
+    <mvc:resources mapping="/resources/**" location="/WEB-INF/resources/"/>
+    <mvc:annotation-driven/>
 
 </beans>
