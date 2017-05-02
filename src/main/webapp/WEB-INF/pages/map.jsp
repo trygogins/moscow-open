@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
@@ -9,11 +10,19 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.js"></script>
 
     <script type="text/javascript">
-    var pollution = "<c:out value='${pollution}' />";
     </script>
-    <script src="<c:url value="/resources/map.js" />"></script>
-
     <script type="text/javascript">
+        var myMap;
+        ymaps.ready(function () {
+
+            myMap = new ymaps.Map('map', {
+                center: [55.751574, 37.573856],
+                zoom: 10
+            }, {
+                searchControlProvider: 'yandex#search'
+            });
+        });
+
         $(document).ready(function() {
             $("#monthSlider").slider();
 
@@ -30,22 +39,22 @@
             });
             $("#monthSlider").on("slideStop", function(slideEvt) {
                 if (firstVal != slideEvt.value) {
-                    alert("!")
                     var d = new Date();
                     d.setMonth(d.getMonth() + slideEvt.value);
                     var strFilterDate = d.getMonth() + "." + d.getFullYear();
 
-                    var responseJson;
+                    $.getJSON('/get_air_quality_points?filter_date=' + strFilterDate, function(data) {
+                        for (var i = 0, len = data.length; i < len; i++) {
+                            console.log(data[i]['Cells']['Location']);
+                            ymaps.geocode(data[i]['Cells']['Location']).then(function(res) {
+                                var geoObject = res.geoObjects.get(0);
+                                geoObject.properties.set('iconCaption', geoObject.getAddressLine());
+//                                geoObject.properties.set('iconContent', data[i]['Cells']['MonthlyAveragePDKss'] > 1 ? "X" : "V");
 
-                    $.ajax({
-                        type: "GET",
-                        url: '/get_air_quality_points?filter_date=' + strFilterDate,
-                        success: function(resp) {
-                            responseJson = resp;
+                                myMap.geoObjects.add(geoObject);
+                            });
                         }
-                    })
-
-
+                    });
                 }
             });
         });

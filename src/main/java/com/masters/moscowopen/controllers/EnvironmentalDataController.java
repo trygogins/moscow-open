@@ -29,13 +29,14 @@ public class EnvironmentalDataController {
 	@Value("${open.data.mos.api_key}")
 	private String apiKey;
 
-	@RequestMapping(value = "/get_air_quality_points", method = RequestMethod.GET)
+	@RequestMapping(value = "/get_air_quality_points", method = RequestMethod.GET, produces={"application/json; charset=UTF-8"})
 	public String getPoints(@RequestParam("filter_date") String filterDate) throws IOException {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		HttpGet httpGet = new HttpGet("https://apidata.mos.ru/v1/datasets/2453/rows?api_key=" + apiKey);
+		httpGet.addHeader("Content-Type", "application/json; charset=utf-8");
 		HttpResponse response = httpClient.execute(httpGet);
-		String jsonString = IOUtils.toString(response.getEntity().getContent());
+		String jsonString = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
 
 		JSONArray jsonData = new JSONArray(jsonString);
 		List<JSONObject> result = new ArrayList<>();
