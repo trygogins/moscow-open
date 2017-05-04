@@ -21,6 +21,11 @@
             }, {
                 searchControlProvider: 'yandex#search'
             });
+
+            myMap.events.add('click', function(e) {
+                $("#pieChartDescription").text("");
+                $("#descriptionDiv").css('visibility', 'visible');
+            });
         });
 
         $(document).ready(function() {
@@ -29,7 +34,8 @@
             $("#monthSlider").on("slide", function(slideEvt) {
                 var d = new Date();
                 d.setMonth(d.getMonth() + slideEvt.value);
-                var strFilterDate = d.getMonth() + "." + d.getFullYear();
+                if (d.getMonth() == 0) d.setMonth(1);
+                var strFilterDate = (d.getMonth() > 9 ? d.getMonth() : "0" + d.getMonth()) + "." + d.getFullYear();
                 $("#filterMonthValue").text(strFilterDate);
             });
 
@@ -39,19 +45,68 @@
             });
             $("#monthSlider").on("slideStop", function(slideEvt) {
                 if (firstVal != slideEvt.value) {
+                    $("#pieChartDescription").text("");
+                    $("#descriptionDiv").css('visibility', 'visible');
+
                     var d = new Date();
                     d.setMonth(d.getMonth() + slideEvt.value);
-                    var strFilterDate = d.getMonth() + "." + d.getFullYear();
+                    if (d.getMonth() == 0) d.setMonth(1);
+                    var strFilterDate = (d.getMonth() > 9 ? d.getMonth() : "0" + d.getMonth()) + "." + d.getFullYear();
 
                     $.getJSON('/get_air_quality_points?filter_date=' + strFilterDate, function(data) {
-                        for (var i = 0, len = data.length; i < len; i++) {
-                            console.log(data[i]['Cells']['Location']);
-                            ymaps.geocode(data[i]['Cells']['Location']).then(function(res) {
-                                var geoObject = res.geoObjects.get(0);
-                                geoObject.properties.set('iconCaption', geoObject.getAddressLine());
-//                                geoObject.properties.set('iconContent', data[i]['Cells']['MonthlyAveragePDKss'] > 1 ? "X" : "V");
+                        myMap.geoObjects.removeAll();
 
-                                myMap.geoObjects.add(geoObject);
+                        for (var key in data) {
+                            let measurementInfo = data[key];
+                            ymaps.geocode(key).then(function(res) {
+                                var geoObject = res.geoObjects.get(0);
+
+                                var caption = "",
+                                        green = 0,
+                                        black = 0;
+                                for (var i = 0; i < measurementInfo.length && measurementInfo[i]['Cells']['MonthlyAveragePDKss'] != null; i++) {
+                                    caption += ("<b>" + measurementInfo[i]['Cells']['Parameter'])
+                                            + "</b>: "
+                                            + measurementInfo[i]['Cells']['MonthlyAveragePDKss']
+                                            + "<br>";
+
+                                    measurementInfo[i]['Cells']['MonthlyAveragePDKss'] < 1 ?
+                                            green ++
+                                            : black ++;
+                                }
+
+                                if (green + black == 0) {
+                                    return;
+                                }
+
+                                // creating PieChart:
+                                var data = [{weight: green, color: '#00FF00'}, {weight: black, color: '#000000'}];
+                                if (green * black == 0) {
+                                    if (green > 0) {
+                                        data = [{weight: green, color: '#00FF00'}];
+                                    } else {
+                                        data = [{weight: black, color: '#000000'}];
+                                    }
+                                }
+
+                                var myPlacemark = new ymaps.Placemark(geoObject.geometry._coordinates,
+                                        {
+                                            data: data
+                                        }, {
+                                            iconLayout: 'default#pieChart',
+                                            iconPieChartRadius: 30,
+                                            iconPieChartCoreRadius: 10,
+                                            iconPieChartCoreFillStyle: '#ffffff',
+                                            iconPieChartStrokeStyle: '#ffffff',
+                                            iconPieChartStrokeWidth: 3
+                                        });
+
+                                myPlacemark.events.add("click", function(e) {
+                                    $("#pieChartDescription").text(caption);
+                                    $("#descriptionDiv").css('visibility', 'visible')
+                                });
+
+                                myMap.geoObjects.add(myPlacemark);
                             });
                         }
                     });
@@ -66,11 +121,15 @@
 <body style="padding-top: 50px">
     <div class="container well" align="center" style="width: 50%;">
         <div>
-            <input id="monthSlider" type="text" data-slider-min="-20" data-slider-max="0" data-slider-step="1" data-slider-value="0"/&t
-            <span id="filterMonth">Month: <span id="filterMonthValue">05-2017</span></span>
+            <span id="filterMonth" style="font-size: 120%">Month: <span id="filterMonthValue">05.2017</span></span>
+            <input id="monthSlider" type="text" data-slider-min="-20" data-slider-max="0" data-slider-step="1" data-slider-value="0"/>
         </div>
 
         <div id="map" class="container" style="width: 100%; height: 80%; padding-top: 20px">
+        </div>
+
+        <div id="descriptionDiv" style="visibility: hidden">
+            <span id="pieChartDescription"></span>
         </div>
     </div>
 </body>

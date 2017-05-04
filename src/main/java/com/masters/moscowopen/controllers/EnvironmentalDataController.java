@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EnvironmentalDataController {
@@ -39,21 +41,26 @@ public class EnvironmentalDataController {
 		String jsonString = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
 
 		JSONArray jsonData = new JSONArray(jsonString);
-		List<JSONObject> result = new ArrayList<>();
+		Map<String, List<JSONObject>> result = new HashMap<>();
 
 		for (Object measurement : jsonData) {
 			JSONObject jsonItem = (JSONObject) measurement;
 			String dateStr = jsonItem.getJSONObject("Cells").getString("Period");
 
-			if (in(dateStr, filterDate)) {
-				result.add(jsonItem);
+			if (isEqual(dateStr, filterDate)) {
+				String location = jsonItem.getJSONObject("Cells").getString("Location");
+				if (!result.containsKey(location)) {
+					result.put(location, new ArrayList<>());
+				}
+
+				result.get(location).add(jsonItem);
 			}
 		}
 
-		return new JSONArray(result).toString();
+		return new JSONObject(result).toString();
 	}
 
-	private boolean in(String dateStr, String filterDateStr) {
+	private boolean isEqual(String dateStr, String filterDateStr) {
 		DateTime given = DateTimeFormat.forPattern("MM.YYYY").parseDateTime(dateStr);
 		DateTime filterDate = DateTimeFormat.forPattern("MM.YYYY").parseDateTime(filterDateStr);
 
