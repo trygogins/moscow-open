@@ -12,7 +12,7 @@
 <body>
 <jsp:include page="navbar.jsp"/>
 <div class="container" style="padding-top: 5%;">
-  <h1 class="text-center" style="padding-top: 20%;">Главная страница</h1>
+  <h1 class="text-center" style="padding-top: 20%;">Main Page</h1>
 </div>
 
 </body>
