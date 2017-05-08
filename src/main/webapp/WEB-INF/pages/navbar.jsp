@@ -20,7 +20,6 @@
 
       <ul class="nav navbar-nav">
         <li><a href="/env_map">Environment</a></li>
-        <li><a href="/parking_map">Parking</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

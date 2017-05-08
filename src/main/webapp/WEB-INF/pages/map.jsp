@@ -13,6 +13,7 @@
     </script>
     <script type="text/javascript">
         var myMap;
+        var prev; // previously clicked placemark (for usability)
         ymaps.ready(function () {
 
             myMap = new ymaps.Map('map', {
@@ -23,8 +24,13 @@
             });
 
             myMap.events.add('click', function(e) {
-                $("#pieChartDescription").text("");
+                document.getElementById("descriptionDiv").innerHTML = "";
                 $("#descriptionDiv").css('visibility', 'visible');
+
+                if (prev != null) {
+                    prev.options.set("iconPieChartStrokeStyle", "#ffffff");
+                    prev.options.set("iconPieChartRadius", 30);
+                }
             });
         });
 
@@ -45,7 +51,7 @@
             });
             $("#monthSlider").on("slideStop", function(slideEvt) {
                 if (firstVal != slideEvt.value) {
-                    $("#pieChartDescription").text("");
+                    document.getElementById("descriptionDiv").innerHTML = "";
                     $("#descriptionDiv").css('visibility', 'visible');
 
                     var d = new Date();
@@ -58,19 +64,24 @@
 
                         for (var key in data) {
                             let measurementInfo = data[key];
+
                             ymaps.geocode(key).then(function(res) {
                                 var geoObject = res.geoObjects.get(0);
 
-                                var caption = "",
+                                var captionArray = [],
                                         green = 0,
                                         black = 0;
                                 for (var i = 0; i < measurementInfo.length && measurementInfo[i]['Cells']['MonthlyAveragePDKss'] != null; i++) {
-                                    caption += ("<b>" + measurementInfo[i]['Cells']['Parameter'])
-                                            + "</b>: "
-                                            + measurementInfo[i]['Cells']['MonthlyAveragePDKss']
-                                            + "<br>";
+                                    var isNotPolluted = measurementInfo[i]['Cells']['MonthlyAveragePDKss'] < 1;
+                                    var redColor = isNotPolluted ? ""
+                                            : "<p style=\"color:#FF0000\">";
 
-                                    measurementInfo[i]['Cells']['MonthlyAveragePDKss'] < 1 ?
+                                    var items = redColor + "<b>" + measurementInfo[i]['Cells']['Parameter']
+                                    + "</b>: " + measurementInfo[i]['Cells']['MonthlyAveragePDKss'] + (isNotPolluted ? "" : "</p>");
+
+                                    captionArray.push(items);
+
+                                    isNotPolluted ?
                                             green ++
                                             : black ++;
                                 }
@@ -101,9 +112,24 @@
                                             iconPieChartStrokeWidth: 3
                                         });
 
+                                captionArray.sort();
+                                var caption = captionArray.join('<br>');
+
                                 myPlacemark.events.add("click", function(e) {
-                                    $("#pieChartDescription").text(caption);
-                                    $("#descriptionDiv").css('visibility', 'visible')
+                                    if (e.get('target') == prev) {
+                                        return;
+                                    }
+                                    document.getElementById("descriptionDiv").innerHTML = caption;
+                                    $("#descriptionDiv").css('visibility', 'visible');
+                                    e.get('target').options.set("iconPieChartStrokeStyle", "#C0C0C0");
+                                    e.get('target').options.set("iconPieChartRadius", 40);
+
+                                    if (prev != null) {
+                                        prev.options.set("iconPieChartStrokeStyle", "#ffffff");
+                                        prev.options.set("iconPieChartRadius", 30);
+                                    }
+
+                                    prev = e.get('target');
                                 });
 
                                 myMap.geoObjects.add(myPlacemark);
@@ -128,8 +154,7 @@
         <div id="map" class="container" style="width: 100%; height: 80%; padding-top: 20px">
         </div>
 
-        <div id="descriptionDiv" style="visibility: hidden">
-            <span id="pieChartDescription"></span>
+        <div id="descriptionDiv" align="left" style="visibility: hidden;">
         </div>
     </div>
 </body>
