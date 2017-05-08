@@ -20,6 +20,7 @@
     <div class="container well">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#env_map">Map</a></li>
+            <li><a data-toggle="tab" href="#env_time">Timeline</a></li>
             <li><a data-toggle="tab" href="#env_summary">Summary</a></li>
         </ul>
         <div class="tab-content">
@@ -38,6 +39,9 @@
             </div>
             <div id="env_summary" class="tab-pane fade">
                 <h3>Environment Summary</h3>
+            </div>
+            <div id="env_time" class="tab-pane fade">
+                <h3>Environment Timeline</h3>
             </div>
         </div>
     </div>
