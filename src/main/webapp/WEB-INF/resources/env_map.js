@@ -92,7 +92,7 @@ $(document).ready(function() {
                                 data: data
                             }, {
                                 iconLayout: 'default#pieChart',
-                                iconPieChartRadius: 30,
+                                iconPieChartRadius: 25,
                                 iconPieChartCoreRadius: 10,
                                 iconPieChartCoreFillStyle: '#ffffff',
                                 iconPieChartStrokeStyle: '#ffffff',
@@ -109,7 +109,7 @@ $(document).ready(function() {
                             document.getElementById("descriptionDiv").innerHTML = caption;
                             $("#descriptionDiv").css('visibility', 'visible');
                             e.get('target').options.set("iconPieChartStrokeStyle", "#C0C0C0");
-                            e.get('target').options.set("iconPieChartRadius", 40);
+                            e.get('target').options.set("iconPieChartRadius", 35);
 
                             if (prev != null) {
                                 prev.options.set("iconPieChartStrokeStyle", "#ffffff");

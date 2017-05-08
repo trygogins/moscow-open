@@ -13,20 +13,32 @@
     </script>
     <script src="/resources/env_map.js" type="text/javascript"></script>
 
-    <title>Moscow Open Data::Map</title>
+    <title>Moscow Open::Map</title>
     <jsp:include page="navbar.jsp"/>
 </head>
 <body style="padding-top: 50px">
-    <div class="container well" align="center" style="width: 50%;">
-        <div>
-            <span id="filterMonth" style="font-size: 120%">Month: <span id="filterMonthValue">05.2017</span></span>
-            <input id="monthSlider" type="text" data-slider-min="-20" data-slider-max="0" data-slider-step="1" data-slider-value="0"/>
-        </div>
+    <div class="container well">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#env_map">Map</a></li>
+            <li><a data-toggle="tab" href="#env_summary">Summary</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="env_map" class="tab-pane fade in active">
+                <h3>Environment Map</h3>
+                <div>
+                    <span id="filterMonth" style="font-size: 120%">Month: <span id="filterMonthValue">05.2017</span></span>
+                    <input id="monthSlider" type="text" data-slider-min="-20" data-slider-max="0" data-slider-step="1" data-slider-value="0"/>
+                </div>
 
-        <div id="map" class="container" style="width: 100%; height: 80%; padding-top: 20px">
-        </div>
+                <div id="map" class="container" style="width: 100%; height: 80%; padding-top: 20px">
+                </div>
 
-        <div id="descriptionDiv" align="left" style="visibility: hidden;">
+                <div id="descriptionDiv" align="left" style="visibility: hidden;">
+                </div>
+            </div>
+            <div id="env_summary" class="tab-pane fade">
+                <h3>Environment Summary</h3>
+            </div>
         </div>
     </div>
 </body>
