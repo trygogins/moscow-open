@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <script src="http://code.jquery.com/jquery-latest.js"></script>
-  <title>Noodle::Main</title>
+  <title>Moscow Open::Main</title>
 
   <style type="text/css">
   </style>

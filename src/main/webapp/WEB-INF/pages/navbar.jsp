@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Noodle Analysis</title>
+  <title>Moscow Open Analysis</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <!-- Bootstrap -->
   <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
