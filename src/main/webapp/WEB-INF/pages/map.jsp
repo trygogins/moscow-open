@@ -9,9 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/css/bootstrap-slider.css" type="text/css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.js"></script>
 
-    <script type="text/javascript">
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
     <script src="/resources/env_map.js" type="text/javascript"></script>
+
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script src="/resources/timeline.js" type="text/javascript"></script>
 
     <title>Moscow Open::Map</title>
     <jsp:include page="navbar.jsp"/>
@@ -27,7 +31,7 @@
             <div id="env_map" class="tab-pane fade in active">
                 <h3>Environment Map</h3>
                 <div>
-                    <span id="filterMonth" style="font-size: 120%">Month: <span id="filterMonthValue">05.2017</span></span>
+                    <span id="filterMonth" style="font-size: 120%">Month: <span id="filterMonthValue">05-2017</span></span>
                     <input id="monthSlider" type="text" data-slider-min="-20" data-slider-max="0" data-slider-step="1" data-slider-value="0"/>
                 </div>
 
@@ -37,11 +41,31 @@
                 <div id="descriptionDiv" align="left" style="visibility: hidden;">
                 </div>
             </div>
-            <div id="env_summary" class="tab-pane fade">
-                <h3>Environment Summary</h3>
-            </div>
             <div id="env_time" class="tab-pane fade">
                 <h3>Environment Timeline</h3>
+                <div>
+                    <span style="font-size: 120%">Group Environment Data:</span>
+                    <select id="groupBySelector" class="selectpicker">
+                        <option value="District">By District</option>
+                        <option value="StationName">By Station Name</option>
+                    </select>
+
+                </div>
+                <div>
+                    <span style="font-size: 120%">Select Filter: </span>
+                    <select id="groupValuesSelector" class="selectpicker" data-live-search="true">
+                        <option>one</option>
+                        <option>two</option>
+                        <option>three</option>
+                        <option>four</option>
+                        <option>five</option>
+                    </select>
+                </div>
+
+                <div id="chart_container" style="width:100%; height:400px;"></div>
+            </div>
+            <div id="env_summary" class="tab-pane fade">
+                <h3>Environment Summary</h3>
             </div>
         </div>
     </div>
