@@ -81,8 +81,9 @@ var processResponse = function (data) {
                     : "<p style=\"color:#FF0000\">";
 
                 var items = redColor + "<b>" + measurementInfo[i]['Cells']['Parameter']
-                    + "</b>: " + measurementInfo[i]['Cells']['MonthlyAveragePDKss'] + (isNotPolluted ? "" : "</p>");
-
+                    + "</b>: " + measurementInfo[i]['Cells']['MonthlyAverage']
+                    + " (" + Math.round(measurementInfo[i]['Cells']['MonthlyAveragePDKss'] * 100) + (isNotPolluted ? "%)" : "%)</p>");
+                console.log(items);
                 captionArray.push(items);
 
                 isNotPolluted ?

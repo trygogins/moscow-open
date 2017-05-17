@@ -16,6 +16,7 @@
 
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
     <script src="/resources/timeline.js" type="text/javascript"></script>
+    <script src="/resources/summary.js" type="text/javascript"></script>
 
     <title>Moscow Open::Map</title>
     <jsp:include page="navbar.jsp"/>
@@ -54,11 +55,10 @@
                 <div>
                     <span style="font-size: 120%">Select Filter: </span>
                     <select id="groupValuesSelector" class="selectpicker" data-live-search="true">
-                        <option>one</option>
-                        <option>two</option>
-                        <option>three</option>
-                        <option>four</option>
-                        <option>five</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
                     </select>
                 </div>
 
@@ -66,6 +66,9 @@
             </div>
             <div id="env_summary" class="tab-pane fade">
                 <h3>Environment Summary</h3>
+
+                <div id="mostPollutedStations" align="left"></div>
+                <div id="mostPollutedDistricts" align="left"></div>
             </div>
         </div>
     </div>
