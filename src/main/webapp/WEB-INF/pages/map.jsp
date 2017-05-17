@@ -69,6 +69,12 @@
 
                 <div id="mostPollutedStations" align="left"></div>
                 <div id="mostPollutedDistricts" align="left"></div>
+
+                <div id="summaryNote" align="left">
+                    <i>
+                        <br><br><b>Note:</b> the coefficients illustrate the percentage of air quality measurements within a district/station name over the last 12 months.
+                    </i>
+                </div>
             </div>
         </div>
     </div>
